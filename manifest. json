@@ -1,11 +1,15 @@
 {
   "name": "Student Study Hub",
   "short_name": "Study Hub",
-  "description": "A simple study organizer for college students.",
-  "start_url": "/Students-study-hub/",
-  "scope": "/Students-study-hub/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#0b1020",
   "theme_color": "#0b1020",
-  "orientation": "portrait"
+  "icons": [
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
