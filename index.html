@@ -1,0 +1,673 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Study Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+  
+  <style>
+  
+  :root{
+  --bg:#0b1020;
+  --card:#121a33;
+  --muted:#7f8bb3;
+  --text:#e8ecff;
+  --accent:#6ee7ff;
+  --accent2:#a78bfa;
+  --danger:#ff6b6b;
+  --border: rgba(255,255,255,.08);
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --radius: 16px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;background: radial-gradient(1200px 600px at 20% 0%, rgba(110,231,255,.15), transparent 60%), radial-gradient(900px 500px at 90% 20%, rgba(167,139,250,.15), transparent 55%), var(--bg); color:var(--text)}
+a{color:inherit;text-decoration:none}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+
+.topbar{
+  position: sticky; top:0; z-index:10;
+  background: rgba(11,16,32,.75);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  display:flex; gap:16px; align-items:center; justify-content:space-between;
+  padding:14px 18px;
+}
+.brand{display:flex;gap:12px;align-items:center}
+.logo{
+  width:44px;height:44px;border-radius:14px;
+  display:grid;place-items:center;
+  background: linear-gradient(135deg, rgba(110,231,255,.25), rgba(167,139,250,.25));
+  border:1px solid var(--border);
+  font-weight:700;
+}
+.brand h1{font-size:16px;margin:0}
+.sub{margin:2px 0 0;color:var(--muted);font-size:12px}
+
+.nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
+.nav a{
+  padding:8px 10px;border-radius:12px;
+  color:var(--muted);
+  border:1px solid transparent;
+}
+.nav a:hover{color:var(--text);border-color:var(--border);background:rgba(255,255,255,.03)}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap:16px;
+  margin-top:18px;
+}
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+  border:1px solid var(--border);
+  border-radius: var(--radius);
+  padding:16px;
+  box-shadow: var(--shadow);
+}
+.card h2{margin:0 0 10px;font-size:16px}
+.hint{color:var(--muted);margin:10px 0 0;line-height:1.4}
+.hint.small{font-size:12px}
+
+.grid .card:nth-child(1){grid-column: span 4}
+.grid .card:nth-child(2){grid-column: span 4}
+.grid .card:nth-child(3){grid-column: span 4}
+.grid .card:nth-child(4){grid-column: span 12}
+
+@media (max-width: 900px){
+  .grid .card:nth-child(1),
+  .grid .card:nth-child(2),
+  .grid .card:nth-child(3){grid-column: span 12}
+}
+
+.stack{margin-top:24px;display:flex;flex-direction:column;gap:12px}
+.sectionHeader{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sectionHeader h2{margin:0}
+.row{display:flex;gap:10px;align-items:center}
+.wrap{flex-wrap:wrap}
+
+input, textarea{
+  width:100%;
+  background: rgba(0,0,0,.25);
+  color: var(--text);
+  border:1px solid var(--border);
+  border-radius: 12px;
+  padding:12px 12px;
+  outline:none;
+}
+textarea{resize:vertical;min-height:180px;line-height:1.5}
+
+button, .linkBtn{
+  background: linear-gradient(135deg, rgba(110,231,255,.22), rgba(167,139,250,.22));
+  color: var(--text);
+  border:1px solid var(--border);
+  padding:10px 12px;
+  border-radius: 12px;
+  cursor:pointer;
+  font-weight:600;
+}
+button:hover, .linkBtn:hover{filter: brightness(1.08)}
+.secondary{background: rgba(255,255,255,.04)}
+.danger{background: rgba(255,107,107,.18); border-color: rgba(255,107,107,.35)}
+
+.today{display:flex;justify-content:space-between;gap:10px}
+.k{color:var(--muted);font-size:12px}
+.v{font-size:18px;font-weight:700;margin-top:2px}
+
+.timer .label{color:var(--muted);font-size:12px}
+.timer .time{font-size:44px;font-weight:800;letter-spacing:1px;margin:6px 0 10px}
+.settings{margin-top:10px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:140px;color:var(--muted);font-size:12px}
+.field input{width:140px}
+
+.filters{margin-top:12px}
+.pill{
+  background: rgba(255,255,255,.03);
+  border:1px solid var(--border);
+  color: var(--muted);
+  padding:8px 10px;
+  border-radius: 999px;
+}
+.pill.active{color:var(--text);border-color: rgba(110,231,255,.35);background: rgba(110,231,255,.08)}
+
+.list{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:8px}
+.list li{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  border:1px solid var(--border);
+  background: rgba(255,255,255,.02);
+  padding:10px 12px;border-radius: 14px;
+}
+.list .left{display:flex;align-items:center;gap:10px;min-width:0}
+.list .title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.list .meta{color:var(--muted);font-size:12px}
+.list .actions{display:flex;gap:8px}
+.iconBtn{
+  padding:8px 10px;border-radius:12px;
+  background: rgba(255,255,255,.03);
+}
+.iconBtn:hover{background: rgba(255,255,255,.06)}
+
+.links a{color: var(--accent)}
+.footer{margin:28px 0 6px;color:var(--muted);text-align:center;font-size:12px}
+  
+  
+  </style>  
+  
+  
+  
+  
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">SH</div>
+      <div>
+        <h1>Student Study Hub</h1>
+        <p class="sub">Plan • Focus • Review</p>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="#dashboard">Dashboard</a>
+      <a href="#tasks">Tasks</a>
+      <a href="#pomodoro">Pomodoro</a>
+      <a href="#notes">Notes</a>
+      <a href="#resources">Resources</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="dashboard" class="grid">
+      <article class="card">
+        <h2>Today</h2>
+        <div class="today">
+          <div>
+            <div class="k">Date</div>
+            <div id="todayDate" class="v">—</div>
+          </div>
+          <div>
+            <div class="k">Time</div>
+            <div id="todayTime" class="v">—</div>
+          </div>
+        </div>
+        <p class="hint">Tip: Start with 1 “most important task” then a 25‑minute focus session.</p>
+      </article>
+
+      <article class="card">
+        <h2>Quick Add</h2>
+        <form id="quickTaskForm" class="row">
+          <input id="quickTaskInput" type="text" placeholder="Add a task (e.g., Math homework)" autocomplete="off" />
+          <button type="submit">Add</button>
+        </form>
+        <div class="mini">
+          <div class="k">Tasks left</div>
+          <div id="tasksLeft" class="v">0</div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Pomodoro</h2>
+        <div class="timer">
+          <div id="timerLabel" class="label">Focus</div>
+          <div id="timerDisplay" class="time">25:00</div>
+          <div class="row wrap">
+            <button id="startPauseBtn" type="button">Start</button>
+            <button id="resetBtn" type="button" class="secondary">Reset</button>
+            <button id="skipBtn" type="button" class="secondary">Skip</button>
+          </div>
+
+          <toggle class="settings">
+            Settings
+            <div class="row wrap">
+              <label class="field">
+                Focus (min)
+                <input id="focusMins" type="number" min="1" value="25" />
+              </label>
+              <label class="field">
+                Break (min)
+                <input id="breakMins" type="number" min="1" value="5" />
+              </label>
+              <button id="applyTimerSettings" type="button">Apply</button>
+            </div>
+          </toggle>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>Notes</h2>
+        <p class="hint">Write key formulas, summary points, or “what I’ll review next”.</p>
+        <a class="linkBtn" href="#notes">Open Notes</a>
+      </article>
+    </section>
+
+    <section id="tasks" class="stack">
+      <header class="sectionHeader">
+        <h2>Tasks</h2>
+        <div class="row wrap">
+          <button id="clearCompletedBtn" type="button" class="secondary">Clear completed</button>
+          <button id="clearAllTasksBtn" type="button" class="danger">Clear all</button>
+        </div>
+      </header>
+
+      <article class="card">
+        <form id="taskForm" class="row">
+          <input id="taskInput" type="text" placeholder="New task (e.g., Read chapter 3)" autocomplete="off" />
+          <button type="submit">Add Task</button>
+        </form>
+
+        <div class="filters row wrap">
+          <button type="button" class="pill active" data-filter="all">All</button>
+          <button type="button" class="pill" data-filter="active">Active</button>
+          <button type="button" class="pill" data-filter="done">Done</button>
+        </div>
+
+        <ul id="taskList" class="list"></ul>
+      </article>
+    </section>
+
+    <section id="notes" class="stack">
+      <header class="sectionHeader">
+        <h2>Notes</h2>
+        <div class="row wrap">
+          <button id="exportNotesBtn" type="button" class="secondary">Export</button>
+          <button id="clearNotesBtn" type="button" class="danger">Clear</button>
+        </div>
+      </header>
+
+      <article class="card">
+        <textarea id="notesArea" rows="10" placeholder="Write your study notes here..."></textarea>
+        <div class="hint small">Auto-saves as you type (stored on this browser).</div>
+      </article>
+    </section>
+
+    <section id="resources" class="stack">
+      <header class="sectionHeader">
+        <h2>Resources</h2>
+        <p class="hint">Add your own links for quick access.</p>
+      </header>
+
+      <article class="card">
+        <form id="linkForm" class="row">
+          <input id="linkTitle" type="text" placeholder="Link title (e.g., Khan Academy)" autocomplete="off" />
+          <input id="linkUrl" type="url" placeholder="https://..." autocomplete="off" />
+          <button type="submit">Add Link</button>
+        </form>
+        <ul id="linksList" class="list links"></ul>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <p>Built for studying. Works offline after first load (localStorage).</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  
+  <script>
+  
+  // ---------- Utilities ----------
+const $ = (sel) => document.querySelector(sel);
+
+function pad(n){ return String(n).padStart(2, "0"); }
+
+function formatTime(seconds){
+  const m = Math.floor(seconds / 60);
+  const s = seconds % 60;
+  return `${pad(m)}:${pad(s)}`;
+}
+
+function loadJSON(key, fallback){
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+}
+function saveJSON(key, value){
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
+// ---------- Clock ----------
+function tickClock(){
+  const now = new Date();
+  $("#todayDate").textContent = now.toLocaleDateString(undefined, {
+    weekday: "long", year: "numeric", month: "short", day: "numeric"
+  });
+  $("#todayTime").textContent = now.toLocaleTimeString(undefined, {
+    hour: "2-digit", minute: "2-digit"
+  });
+}
+tickClock();
+setInterval(tickClock, 1000);
+
+// ---------- Tasks ----------
+const TASKS_KEY = "studyhub_tasks_v1";
+let tasks = loadJSON(TASKS_KEY, []);
+
+let currentFilter = "all"; // all | active | done
+
+function tasksLeftCount(){
+  return tasks.filter(t => !t.done).length;
+}
+
+function renderTasks(){
+  $("#tasksLeft").textContent = String(tasksLeftCount());
+
+  const list = $("#taskList");
+  list.innerHTML = "";
+
+  const filtered = tasks.filter(t => {
+    if (currentFilter === "active") return !t.done;
+    if (currentFilter === "done") return t.done;
+    return true;
+  });
+
+  if (filtered.length === 0){
+    const empty = document.createElement("li");
+    empty.innerHTML = `<div class="left"><div class="title">No tasks here yet.</div></div>`;
+    list.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(task => {
+    const li = document.createElement("li");
+
+    const left = document.createElement("div");
+    left.className = "left";
+
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = !!task.done;
+    cb.addEventListener("change", () => {
+      task.done = cb.checked;
+      saveJSON(TASKS_KEY, tasks);
+      renderTasks();
+    });
+
+    const textWrap = document.createElement("div");
+    textWrap.style.minWidth = "0";
+
+    const title = document.createElement("div");
+    title.className = "title";
+    title.textContent = task.title;
+    if (task.done) title.style.textDecoration = "line-through";
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    meta.textContent = `Added ${new Date(task.createdAt).toLocaleString()}`;
+
+    textWrap.appendChild(title);
+    textWrap.appendChild(meta);
+
+    left.appendChild(cb);
+    left.appendChild(textWrap);
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const editBtn = document.createElement("button");
+    editBtn.className = "iconBtn";
+    editBtn.type = "button";
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", () => {
+      const next = prompt("Edit task:", task.title);
+      if (next === null) return;
+      const trimmed = next.trim();
+      if (!trimmed) return;
+      task.title = trimmed;
+      saveJSON(TASKS_KEY, tasks);
+      renderTasks();
+    });
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "iconBtn";
+    delBtn.type = "button";
+    delBtn.textContent = "Delete";
+    delBtn.addEventListener("click", () => {
+      tasks = tasks.filter(t => t.id !== task.id);
+      saveJSON(TASKS_KEY, tasks);
+      renderTasks();
+    });
+
+    actions.appendChild(editBtn);
+    actions.appendChild(delBtn);
+
+    li.appendChild(left);
+    li.appendChild(actions);
+    list.appendChild(li);
+  });
+}
+
+function addTask(title){
+  const trimmed = title.trim();
+  if (!trimmed) return;
+
+  tasks.unshift({
+    id: crypto.randomUUID(),
+    title: trimmed,
+    done: false,
+    createdAt: Date.now()
+  });
+  saveJSON(TASKS_KEY, tasks);
+  renderTasks();
+}
+
+$("#taskForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  addTask($("#taskInput").value);
+  $("#taskInput").value = "";
+});
+
+$("#quickTaskForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  addTask($("#quickTaskInput").value);
+  $("#quickTaskInput").value = "";
+});
+
+document.querySelectorAll(".pill").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".pill").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    renderTasks();
+  });
+});
+
+$("#clearCompletedBtn").addEventListener("click", () => {
+  tasks = tasks.filter(t => !t.done);
+  saveJSON(TASKS_KEY, tasks);
+  renderTasks();
+});
+
+$("#clearAllTasksBtn").addEventListener("click", () => {
+  if (!confirm("Clear ALL tasks?")) return;
+  tasks = [];
+  saveJSON(TASKS_KEY, tasks);
+  renderTasks();
+});
+
+renderTasks();
+
+// ---------- Notes ----------
+const NOTES_KEY = "studyhub_notes_v1";
+$("#notesArea").value = localStorage.getItem(NOTES_KEY) ?? "";
+
+let notesSaveTimer = null;
+$("#notesArea").addEventListener("input", () => {
+  clearTimeout(notesSaveTimer);
+  notesSaveTimer = setTimeout(() => {
+    localStorage.setItem(NOTES_KEY, $("#notesArea").value);
+  }, 200);
+});
+
+$("#clearNotesBtn").addEventListener("click", () => {
+  if (!confirm("Clear notes?")) return;
+  $("#notesArea").value = "";
+  localStorage.setItem(NOTES_KEY, "");
+});
+
+$("#exportNotesBtn").addEventListener("click", () => {
+  const blob = new Blob([$("#notesArea").value], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "studyhub-notes.txt";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+// ---------- Resources / Links ----------
+const LINKS_KEY = "studyhub_links_v1";
+let links = loadJSON(LINKS_KEY, [
+  { id: "khan", title: "Khan Academy", url: "https://www.khanacademy.org/" },
+  { id: "quizlet", title: "Quizlet", url: "https://quizlet.com/" },
+  { id: "docs", title: "Google Docs", url: "https://docs.google.com/" }
+]);
+
+function renderLinks(){
+  const ul = $("#linksList");
+  ul.innerHTML = "";
+
+  links.forEach(link => {
+    const li = document.createElement("li");
+
+    const left = document.createElement("div");
+    left.className = "left";
+
+    const title = document.createElement("div");
+    title.className = "title";
+    title.innerHTML = `<a href="${link.url}" target="_blank" rel="noopener noreferrer">${link.title}</a>
+                       <div class="meta">${link.url}</div>`;
+
+    left.appendChild(title);
+
+    const actions = document.createElement("div");
+    actions.className = "actions";
+
+    const delBtn = document.createElement("button");
+    delBtn.className = "iconBtn";
+    delBtn.type = "button";
+    delBtn.textContent = "Remove";
+    delBtn.addEventListener("click", () => {
+      links = links.filter(l => l.id !== link.id);
+      saveJSON(LINKS_KEY, links);
+      renderLinks();
+    });
+
+    actions.appendChild(delBtn);
+
+    li.appendChild(left);
+    li.appendChild(actions);
+    ul.appendChild(li);
+  });
+}
+
+$("#linkForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const title = $("#linkTitle").value.trim();
+  const url = $("#linkUrl").value.trim();
+  if (!title || !url) return;
+
+  links.unshift({ id: crypto.randomUUID(), title, url });
+  saveJSON(LINKS_KEY, links);
+  renderLinks();
+
+  $("#linkTitle").value = "";
+  $("#linkUrl").value = "";
+});
+
+renderLinks();
+
+// ---------- Pomodoro ----------
+let focusMinutes = Number(localStorage.getItem("studyhub_focusMins") ?? 25);
+let breakMinutes = Number(localStorage.getItem("studyhub_breakMins") ?? 5);
+
+$("#focusMins").value = focusMinutes;
+$("#breakMins").value = breakMinutes;
+
+let mode = "focus"; // focus | break
+let remaining = focusMinutes * 60;
+let intervalId = null;
+
+function updateTimerUI(){
+  $("#timerLabel").textContent = mode === "focus" ? "Focus" : "Break";
+  $("#timerDisplay").textContent = formatTime(remaining);
+  $("#startPauseBtn").textContent = intervalId ? "Pause" : "Start";
+}
+
+function setMode(nextMode){
+  mode = nextMode;
+  remaining = (mode === "focus" ? focusMinutes : breakMinutes) * 60;
+  updateTimerUI();
+}
+
+function start(){
+  if (intervalId) return;
+  intervalId = setInterval(() => {
+    remaining = Math.max(0, remaining - 1);
+    updateTimerUI();
+
+    if (remaining === 0){
+      clearInterval(intervalId);
+      intervalId = null;
+
+      // Switch modes automatically
+      const next = mode === "focus" ? "break" : "focus";
+      setMode(next);
+
+      // Optional: sound
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = "sine"; o.frequency.value = 880;
+        g.gain.value = 0.02;
+        o.connect(g); g.connect(ctx.destination);
+        o.start();
+        setTimeout(() => { o.stop(); ctx.close(); }, 180);
+      } catch {}
+    }
+  }, 1000);
+  updateTimerUI();
+}
+
+function pause(){
+  if (!intervalId) return;
+  clearInterval(intervalId);
+  intervalId = null;
+  updateTimerUI();
+}
+
+$("#startPauseBtn").addEventListener("click", () => {
+  if (intervalId) pause();
+  else start();
+});
+
+$("#resetBtn").addEventListener("click", () => {
+  pause();
+  setMode(mode);
+});
+
+$("#skipBtn").addEventListener("click", () => {
+  pause();
+  setMode(mode === "focus" ? "break" : "focus");
+});
+
+$("#applyTimerSettings").addEventListener("click", () => {
+  const f = Math.max(1, Number($("#focusMins").value || 25));
+  const b = Math.max(1, Number($("#breakMins").value || 5));
+  focusMinutes = f;
+  breakMinutes = b;
+  localStorage.setItem("studyhub_focusMins", String(focusMinutes));
+  localStorage.setItem("studyhub_breakMins", String(breakMinutes));
+  pause();
+  setMode(mode);
+});
+
+updateTimerUI();
+  
+  
+  </script>
+  
+  
+</body>
+  
+</html>
